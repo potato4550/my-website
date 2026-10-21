@@ -1,0 +1,453 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>LOBO — Space Systems · AI/ML · Engineering</title>
+<meta name="description" content="Postgraduate engineering student building AI/ML systems for astronomy and space technology.">
+<style>
+:root{
+  --bg:#0a0c0f; --panel:#0f1318; --line:#1d242d; --line2:#2a3440;
+  --fg:#d7dee6; --dim:#7b8794; --mute:#4b5663;
+  --acc:#4c90f0; --acc2:#2d72d2; --amber:#d9822b; --green:#32a467; --red:#cd4246;
+  --mono:ui-monospace,"JetBrains Mono","SF Mono",Menlo,Consolas,monospace;
+  --sans:Inter,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--fg);font-family:var(--sans);font-size:15px;line-height:1.6;overflow-x:hidden}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);
+  background-size:64px 64px;opacity:.28;mask-image:radial-gradient(ellipse at 50% 20%,#000 20%,transparent 75%);-webkit-mask-image:radial-gradient(ellipse at 50% 20%,#000 20%,transparent 75%)}
+#bgc{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.55}
+a{color:inherit;text-decoration:none}
+.mono{font-family:var(--mono)}
+.label{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim)}
+/* top bar */
+header{position:fixed;top:0;left:0;right:0;z-index:50;height:46px;display:flex;align-items:center;justify-content:space-between;
+  padding:0 20px;background:rgba(10,12,15,.88);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.brand{display:flex;align-items:center;gap:10px;font-family:var(--mono);font-size:12px;letter-spacing:.2em;font-weight:600}
+.brand i{width:10px;height:10px;background:var(--acc);display:inline-block;transform:rotate(45deg)}
+nav{display:flex;gap:2px}
+nav a{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);padding:6px 12px;border:1px solid transparent}
+nav a:hover,nav a.on{color:var(--fg);border-color:var(--line2);background:var(--panel)}
+.hr{display:flex;align-items:center;gap:14px}
+.kbd{font-family:var(--mono);font-size:11px;color:var(--dim);border:1px solid var(--line2);padding:3px 8px;cursor:pointer;background:var(--panel)}
+.kbd:hover{color:var(--fg);border-color:var(--acc)}
+main{position:relative;z-index:1;max-width:1180px;margin:0 auto;padding:0 20px}
+section{padding:96px 0 40px;border-bottom:1px solid var(--line)}
+.sh{display:flex;align-items:baseline;gap:14px;margin-bottom:28px}
+.sh .n{font-family:var(--mono);color:var(--acc);font-size:12px}
+.sh h2{font-family:var(--mono);font-size:13px;letter-spacing:.22em;text-transform:uppercase;font-weight:500}
+.sh .rule{flex:1;height:1px;background:var(--line)}
+/* hero */
+#top{padding-top:120px;min-height:100vh;display:flex;flex-direction:column;justify-content:center}
+.tag{display:inline-flex;gap:8px;align-items:center;font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--green);border:1px solid #1e4d35;background:rgba(50,164,103,.08);padding:4px 10px;margin-bottom:26px}
+.tag b{width:6px;height:6px;border-radius:50%;background:var(--green);animation:p 1.6s infinite}
+@keyframes p{50%{opacity:.25}}
+h1{font-size:clamp(40px,8vw,92px);line-height:.98;font-weight:600;letter-spacing:-.03em}
+h1 span{color:var(--acc)}
+.role{margin-top:22px;font-family:var(--mono);font-size:clamp(13px,2vw,17px);color:var(--dim);min-height:1.6em}
+.role em{font-style:normal;color:var(--fg)}
+.cur{display:inline-block;width:8px;height:1.1em;background:var(--acc);vertical-align:-3px;animation:b 1s steps(1) infinite}
+@keyframes b{50%{opacity:0}}
+.lede{max-width:640px;margin-top:22px;color:#aab4bf;font-size:17px}
+.cta{display:flex;gap:10px;flex-wrap:wrap;margin-top:32px}
+.btn{font-family:var(--mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;padding:11px 18px;border:1px solid var(--line2);background:var(--panel);transition:.15s}
+.btn:hover{border-color:var(--acc);color:#fff}
+.btn.p{background:var(--acc2);border-color:var(--acc2);color:#fff}.btn.p:hover{background:var(--acc)}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);margin-top:64px;border:1px solid var(--line);background:rgba(15,19,24,.8)}
+.stat{padding:18px 20px;border-right:1px solid var(--line)}.stat:last-child{border:0}
+.stat .v{font-family:var(--mono);font-size:26px;color:#fff;margin-top:6px}
+.stat .v small{font-size:12px;color:var(--dim);margin-left:4px}
+/* panels */
+.panel{background:rgba(15,19,24,.85);border:1px solid var(--line)}
+.ph{display:flex;justify-content:space-between;align-items:center;padding:9px 14px;border-bottom:1px solid var(--line)}
+.grid2{display:grid;grid-template-columns:1.1fr .9fr;gap:20px}
+/* ontology */
+#ont{position:relative;height:520px;cursor:crosshair}
+#ont canvas{width:100%;height:100%;display:block}
+#inspect{padding:16px 18px;font-size:13px}
+#inspect h3{font-size:18px;font-weight:600;margin:6px 0 8px}
+#inspect .row{display:flex;justify-content:space-between;border-top:1px solid var(--line);padding:7px 0;font-family:var(--mono);font-size:11.5px;color:var(--dim)}
+#inspect .row b{color:var(--fg);font-weight:500}
+.legend{display:flex;gap:16px;flex-wrap:wrap;padding:10px 14px;border-top:1px solid var(--line)}
+.legend span{font-family:var(--mono);font-size:10.5px;color:var(--dim);display:flex;gap:6px;align-items:center}
+.legend i{width:8px;height:8px;display:inline-block}
+/* projects */
+.filters{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px}
+.f{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;padding:6px 12px;border:1px solid var(--line2);background:transparent;color:var(--dim);cursor:pointer}
+.f:hover{color:var(--fg)}.f.on{background:var(--acc2);border-color:var(--acc2);color:#fff}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:14px}
+.card{padding:20px;background:rgba(15,19,24,.85);border:1px solid var(--line);position:relative;transition:.2s;cursor:pointer}
+.card:hover{border-color:var(--acc);transform:translateY(-2px)}
+.card::before{content:"";position:absolute;left:-1px;top:-1px;width:12px;height:12px;border-top:2px solid var(--acc);border-left:2px solid var(--acc);opacity:0;transition:.2s}
+.card:hover::before{opacity:1}
+.card.hide{display:none}
+.card h3{font-size:18px;margin:10px 0 8px;font-weight:600}
+.card p{color:#98a3af;font-size:14px}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:14px}
+.chip{font-family:var(--mono);font-size:10.5px;padding:2px 8px;border:1px solid var(--line2);color:var(--dim)}
+.st{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em}
+.st.active{color:var(--green)}.st.build{color:var(--amber)}.st.plan{color:var(--acc)}
+.card .more{max-height:0;overflow:hidden;transition:max-height .3s;color:#98a3af;font-size:13.5px}
+.card.open .more{max-height:400px;margin-top:12px;padding-top:12px;border-top:1px solid var(--line)}
+.card.open .more li{margin:0 0 6px 16px}
+/* pipeline */
+.pipe{display:grid;grid-template-columns:repeat(8,1fr);gap:0;border:1px solid var(--line);background:rgba(15,19,24,.85)}
+.stg{padding:16px 12px;border-right:1px solid var(--line);cursor:pointer;transition:.15s;min-height:92px}
+.stg:last-child{border:0}.stg:hover,.stg.on{background:rgba(76,144,240,.1)}
+.stg .k{font-family:var(--mono);font-size:10px;color:var(--acc)}
+.stg .t{font-size:12.5px;margin-top:6px;line-height:1.3}
+#stgd{margin-top:12px;padding:16px 18px;font-size:14px;color:#aab4bf;min-height:70px}
+/* log */
+.log{font-family:var(--mono);font-size:12.5px}
+.log div{display:grid;grid-template-columns:110px 80px 1fr;gap:14px;padding:11px 14px;border-bottom:1px solid var(--line)}
+.log div:last-child{border:0}
+.log .d{color:var(--dim)}.log .k{color:var(--amber)}
+/* contact */
+.contact{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.ct{padding:20px;border:1px solid var(--line);background:rgba(15,19,24,.85);transition:.15s}
+.ct:hover{border-color:var(--acc)}
+.ct .u{font-family:var(--mono);font-size:14px;margin-top:8px;color:var(--acc)}
+footer{position:relative;z-index:1;padding:28px 20px;text-align:center;font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--mute)}
+/* command palette */
+#pal{position:fixed;inset:0;z-index:100;background:rgba(5,7,9,.72);display:none;align-items:flex-start;justify-content:center;padding-top:16vh}
+#pal.on{display:flex}
+#pbox{width:min(560px,92vw);background:var(--panel);border:1px solid var(--line2);box-shadow:0 30px 80px #000}
+#pin{width:100%;background:transparent;border:0;border-bottom:1px solid var(--line);padding:16px 18px;color:var(--fg);font-family:var(--mono);font-size:14px;outline:none}
+#plist div{padding:11px 18px;font-family:var(--mono);font-size:12.5px;color:var(--dim);cursor:pointer;display:flex;justify-content:space-between}
+#plist div.sel,#plist div:hover{background:rgba(76,144,240,.14);color:#fff}
+.reveal{opacity:0;transform:translateY(14px);transition:.6s}.reveal.in{opacity:1;transform:none}
+@media(max-width:860px){
+  nav{display:none}.grid2{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,1fr)}.stat:nth-child(2){border-right:0}.stat:nth-child(-n+2){border-bottom:1px solid var(--line)}
+  .pipe{grid-template-columns:repeat(4,1fr)}.stg:nth-child(4){border-right:0}.stg:nth-child(-n+4){border-bottom:1px solid var(--line)}
+  .contact{grid-template-columns:1fr}.log div{grid-template-columns:80px 1fr}.log .k{display:none}.cards{grid-template-columns:1fr}
+}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<canvas id="bgc"></canvas>
+
+<header>
+  <div class="brand"><i></i>LOBO<span style="color:var(--mute)">/ OPS</span></div>
+  <nav id="nav">
+    <a href="#top">Overview</a><a href="#ontology">Ontology</a><a href="#projects">Projects</a><a href="#pipeline">Pipeline</a><a href="#log">Log</a><a href="#contact">Contact</a>
+  </nav>
+  <div class="hr"><span class="label" id="clock">IST --:--:--</span><span class="kbd" id="kb">⌘K</span></div>
+</header>
+
+<main>
+<!-- OVERVIEW -->
+<section id="top">
+  <div class="tag"><b></b>STATUS: OPEN TO COLLABORATION</div>
+  <h1>LOBO<span>.</span></h1>
+  <div class="role mono">&gt; <em id="typed"></em><span class="cur"></span></div>
+  <p class="lede">Postgraduate engineering student at St Joseph Engineering College. I build AI/ML systems that turn noisy observations into decisions — from exoplanet detection in light curves to the hardware and structures that fly the instruments.</p>
+  <div class="cta">
+    <a class="btn p" href="#projects">View Operations</a>
+    <a class="btn" href="#ontology">Explore Ontology</a>
+    <a class="btn" href="#contact">Establish Contact</a>
+  </div>
+  <div class="stats">
+    <div class="stat"><div class="label">Domains</div><div class="v">3<small>space · AI · systems</small></div></div>
+    <div class="stat"><div class="label">Pipeline Stages</div><div class="v" data-c="8">0</div></div>
+    <div class="stat"><div class="label">Novel Contributions</div><div class="v" data-c="20">0</div></div>
+    <div class="stat"><div class="label">Hackathon</div><div class="v">ISRO<small>BAH 2026</small></div></div>
+  </div>
+</section>
+
+<!-- ONTOLOGY -->
+<section id="ontology" class="reveal">
+  <div class="sh"><span class="n">01</span><h2>Ontology</h2><div class="rule"></div><span class="label">hover · click · drag</span></div>
+  <div class="grid2">
+    <div class="panel">
+      <div class="ph"><span class="label">Object graph · skills ↔ projects</span><span class="label" id="gcount"></span></div>
+      <div id="ont"><canvas id="gc"></canvas></div>
+      <div class="legend">
+        <span><i style="background:#4c90f0"></i>PROJECT</span>
+        <span><i style="background:#d9822b"></i>DOMAIN</span>
+        <span><i style="background:#32a467"></i>TOOL</span>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="ph"><span class="label">Object inspector</span><span class="label" id="oid">—</span></div>
+      <div id="inspect"></div>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects" class="reveal">
+  <div class="sh"><span class="n">02</span><h2>Operations</h2><div class="rule"></div></div>
+  <div class="filters" id="filters">
+    <button class="f on" data-f="all">All</button><button class="f" data-f="space">Space</button><button class="f" data-f="ai">AI / ML</button><button class="f" data-f="hw">Hardware</button><button class="f" data-f="web">Software</button>
+  </div>
+  <div class="cards" id="cards">
+    <article class="card" data-t="space ai">
+      <div class="st active">● ACTIVE · ISRO BAH 2026</div>
+      <h3>Orbital Pioneers — Exoplanet Detection</h3>
+      <p>AI-enabled exoplanet detection pipeline for noisy light curves (Challenge 7). Led a four-person team from problem selection to pitch.</p>
+      <div class="chips"><span class="chip">PyTorch</span><span class="chip">TESS / Kepler / K2</span><span class="chip">Gaia DR3</span><span class="chip">AstroSat</span></div>
+      <ul class="more"><li>8-stage pipeline with 20 novel contributions.</li><li>UMAP pre-filtering and a differentiable Mandel-Agol transit layer.</li><li>Bayesian false-positive model, habitable-zone and ESI classification.</li><li>Ranked follow-up schedule across Indian observatories.</li></ul>
+    </article>
+    <article class="card" data-t="space web">
+      <div class="st build">◐ BUILD</div>
+      <h3>Satellite Tracker</h3>
+      <p>Tracking and visualisation of satellites in orbit, built as an interactive tool.</p>
+      <div class="chips"><span class="chip">Orbital mechanics</span><span class="chip">Visualisation</span></div>
+      <ul class="more"><li>Replace this with what it tracks, the data source and a live link.</li></ul>
+    </article>
+    <article class="card" data-t="ai space">
+      <div class="st plan">○ PLANNED</div>
+      <h3>Multi-Task Star Classifier</h3>
+      <p>One model predicting stellar age, distance, core-collapse supernova probability and number of transiting exoplanets.</p>
+      <div class="chips"><span class="chip">Multi-task learning</span><span class="chip">Astronomy</span></div>
+      <ul class="more"><li>Shared encoder with task-specific heads.</li><li>Separate from the BAH 2026 work.</li></ul>
+    </article>
+    <article class="card" data-t="hw">
+      <div class="st build">◐ BUILD</div>
+      <h3>High-Frequency PCB Design</h3>
+      <p>Layout and design of high-frequency boards where signal integrity drives every decision.</p>
+      <div class="chips"><span class="chip">PCB</span><span class="chip">Signal integrity</span></div>
+      <ul class="more"><li>Add stack-up, frequency range and tools used.</li></ul>
+    </article>
+    <article class="card" data-t="hw">
+      <div class="st build">◐ BUILD</div>
+      <h3>Power Converter</h3>
+      <p>Power electronics design and analysis for efficient conversion.</p>
+      <div class="chips"><span class="chip">Power electronics</span><span class="chip">Simulation</span></div>
+      <ul class="more"><li>Add topology, ratings and measured efficiency.</li></ul>
+    </article>
+    <article class="card" data-t="web">
+      <div class="st active">● DELIVERED</div>
+      <h3>Structural Instability Explorer</h3>
+      <p>Single-file interactive site with 13 modules covering buckling, Monte Carlo simulation, crack propagation, eigenvalue tracking and a design-space explorer.</p>
+      <div class="chips"><span class="chip">Canvas 2D</span><span class="chip">JavaScript</span><span class="chip">Structural analysis</span></div>
+      <ul class="more"><li>Pseudo-3D renderer written in Canvas 2D, with no WebGL dependency.</li></ul>
+    </article>
+    <article class="card" data-t="web">
+      <div class="st active">● DELIVERED</div>
+      <h3>RPA Data Pipelines</h3>
+      <p>Two UiPath projects automating Excel data transformation end to end.</p>
+      <div class="chips"><span class="chip">UiPath</span><span class="chip">Excel</span><span class="chip">Automation</span></div>
+      <ul class="more"><li>Delivered as ready-to-run projects with full workflow structure.</li></ul>
+    </article>
+    <article class="card" data-t="ai">
+      <div class="st plan">○ PLANNED · PBL</div>
+      <h3>Parkinson's Prediction Prototype</h3>
+      <p>Multimodal EEG/EMG/accelerometer data processing aimed at a Parkinson's probability prototype with explainability.</p>
+      <div class="chips"><span class="chip">Biomedical signals</span><span class="chip">Explainability</span></div>
+      <ul class="more"><li>Scoped down to one question: predicting Parkinson's.</li></ul>
+    </article>
+  </div>
+</section>
+
+<!-- PIPELINE -->
+<section id="pipeline" class="reveal">
+  <div class="sh"><span class="n">03</span><h2>Flagship Pipeline</h2><div class="rule"></div><span class="label">click a stage</span></div>
+  <div class="pipe" id="pipe"></div>
+  <div class="panel" id="stgd"></div>
+</section>
+
+<!-- LOG -->
+<section id="log" class="reveal">
+  <div class="sh"><span class="n">04</span><h2>Mission Log</h2><div class="rule"></div></div>
+  <div class="panel log">
+    <div><span class="d">2026</span><span class="k">LEAD</span><span>Led team Orbital Pioneers in ISRO Bharatiya Antariksh Hackathon.</span></div>
+    <div><span class="d">2026</span><span class="k">BUILD</span><span>Shipped an interactive structural instability and sensitivity analysis site.</span></div>
+    <div><span class="d">2026</span><span class="k">BUILD</span><span>Delivered UiPath RPA workflows for Excel data pipelines.</span></div>
+    <div><span class="d">NOW</span><span class="k">STUDY</span><span>Postgraduate engineering, St Joseph Engineering College.</span></div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact" class="reveal" style="border:0">
+  <div class="sh"><span class="n">05</span><h2>Establish Contact</h2><div class="rule"></div></div>
+  <div class="contact">
+    <a class="ct" href="https://github.com/YOUR-USERNAME" target="_blank" rel="noopener"><div class="label">GitHub</div><div class="u">github.com/YOUR-USERNAME →</div></a>
+    <a class="ct" href="https://www.linkedin.com/in/YOUR-HANDLE" target="_blank" rel="noopener"><div class="label">LinkedIn</div><div class="u">linkedin.com/in/YOUR-HANDLE →</div></a>
+    <a class="ct" href="mailto:you@example.com"><div class="label">Email</div><div class="u">you@example.com →</div></a>
+  </div>
+</section>
+</main>
+
+<footer>LOBO · ENGINEERED IN INDIA · <span id="yr"></span> · PRESS ⌘K OR CTRL+K</footer>
+
+<div id="pal"><div id="pbox"><input id="pin" placeholder="Type a command or jump to…" autocomplete="off"><div id="plist"></div></div></div>
+
+<script>
+/* clock */
+const clk=document.getElementById('clock');
+setInterval(tick,1000);tick();
+function tick(){clk.textContent='IST '+new Date().toLocaleTimeString('en-GB',{timeZone:'Asia/Kolkata'})}
+document.getElementById('yr').textContent=new Date().getFullYear();
+
+/* typed role */
+const roles=['Space technology','AI/ML for astronomy','Engineering systems','Exoplanet detection'];
+let ri=0,ci=0,del=false;const te=document.getElementById('typed');
+(function type(){
+  const w=roles[ri];
+  te.textContent=w.slice(0,ci);
+  if(!del&&ci++===w.length){del=true;return setTimeout(type,1400)}
+  if(del&&--ci<0){del=false;ci=0;ri=(ri+1)%roles.length}
+  setTimeout(type,del?28:55);
+})();
+
+/* counters */
+const io=new IntersectionObserver(es=>es.forEach(e=>{
+  if(!e.isIntersecting)return;
+  e.target.classList.add('in');
+  e.target.querySelectorAll('[data-c]').forEach(el=>{
+    const t=+el.dataset.c;let n=0;const s=setInterval(()=>{n++;el.textContent=n;if(n>=t)clearInterval(s)},50);
+  });
+  io.unobserve(e.target);
+}),{threshold:.12});
+document.querySelectorAll('.reveal,#top').forEach(e=>io.observe(e));
+
+/* active nav */
+const links=[...document.querySelectorAll('#nav a')];
+const so=new IntersectionObserver(es=>es.forEach(e=>{
+  if(e.isIntersecting)links.forEach(l=>l.classList.toggle('on',l.getAttribute('href')==='#'+e.target.id));
+}),{rootMargin:'-45% 0px -50% 0px'});
+document.querySelectorAll('section').forEach(s=>so.observe(s));
+
+/* background: drifting orbit particles */
+(function(){
+  const c=document.getElementById('bgc'),x=c.getContext('2d');let W,H,P=[];
+  function rs(){W=c.width=innerWidth;H=c.height=innerHeight;P=Array.from({length:Math.min(70,W/18|0)},()=>({a:Math.random()*6.28,r:80+Math.random()*Math.max(W,H)*.6,s:(Math.random()*.0004+.0001)*(Math.random()<.5?-1:1),z:Math.random()*1.4+.4}))}
+  rs();addEventListener('resize',rs);
+  (function f(){
+    x.clearRect(0,0,W,H);
+    P.forEach(p=>{p.a+=p.s;const px=W*.72+Math.cos(p.a)*p.r,py=H*.4+Math.sin(p.a)*p.r*.45;
+      x.fillStyle='rgba(76,144,240,'+(.12+p.z*.18)+')';x.fillRect(px,py,p.z,p.z)});
+    requestAnimationFrame(f);
+  })();
+})();
+
+/* ontology graph */
+const nodes=[
+ {id:'bah',l:'Orbital Pioneers',t:'project',d:'ISRO BAH 2026 · Challenge 7',info:['Role: Team lead','Pipeline: 8 stages','Novel contributions: 20']},
+ {id:'sat',l:'Satellite Tracker',t:'project',d:'Interactive orbit visualisation',info:['Status: Build']},
+ {id:'star',l:'Star Classifier',t:'project',d:'Multi-task stellar model',info:['Status: Planned']},
+ {id:'pcb',l:'HF PCB',t:'project',d:'High-frequency board design',info:['Status: Build']},
+ {id:'pwr',l:'Power Converter',t:'project',d:'Power electronics',info:['Status: Build']},
+ {id:'str',l:'Structural Explorer',t:'project',d:'13-module interactive site',info:['Status: Delivered']},
+ {id:'rpa',l:'RPA Pipelines',t:'project',d:'UiPath Excel automation',info:['Count: 2','Status: Delivered']},
+ {id:'park',l:'Parkinson Prototype',t:'project',d:'Multimodal biosignal model',info:['Status: Planned']},
+ {id:'space',l:'Space Tech',t:'domain',d:'Missions, orbits, instruments',info:['Type: Domain']},
+ {id:'ml',l:'AI / ML',t:'domain',d:'Learning from noisy signals',info:['Type: Domain']},
+ {id:'eng',l:'Engineering Systems',t:'domain',d:'Hardware, structures, automation',info:['Type: Domain']},
+ {id:'torch',l:'PyTorch',t:'tool',d:'Deep learning framework',info:['Type: Tool']},
+ {id:'js',l:'JavaScript',t:'tool',d:'Interactive front ends',info:['Type: Tool']},
+ {id:'ui',l:'UiPath',t:'tool',d:'Robotic process automation',info:['Type: Tool']},
+ {id:'data',l:'TESS · Kepler · Gaia',t:'tool',d:'Public astronomy datasets',info:['Type: Data source']},
+];
+const edges=[['bah','space'],['bah','ml'],['bah','torch'],['bah','data'],['sat','space'],['sat','js'],['star','ml'],['star','space'],['star','data'],['star','torch'],
+ ['pcb','eng'],['pwr','eng'],['str','eng'],['str','js'],['rpa','eng'],['rpa','ui'],['park','ml'],['park','torch']];
+const col={project:'#4c90f0',domain:'#d9822b',tool:'#32a467'};
+const byId=Object.fromEntries(nodes.map(n=>[n.id,n]));
+const gc=document.getElementById('gc'),g=gc.getContext('2d');let GW,GH,dpr=devicePixelRatio||1;
+function gs(){const r=gc.getBoundingClientRect();GW=r.width;GH=r.height;gc.width=GW*dpr;gc.height=GH*dpr;g.setTransform(dpr,0,0,dpr,0,0)}
+gs();addEventListener('resize',gs);
+nodes.forEach((n,i)=>{const a=i/nodes.length*6.28;n.x=GW/2+Math.cos(a)*120;n.y=GH/2+Math.sin(a)*120;n.vx=n.vy=0});
+let hover=null,sel=byId.bah,drag=null;
+function neigh(n){return edges.filter(e=>e.includes(n.id)).map(e=>byId[e[0]===n.id?e[1]:e[0]])}
+function inspect(n){
+  sel=n;document.getElementById('oid').textContent='OBJ-'+n.id.toUpperCase();
+  const nb=neigh(n);
+  document.getElementById('inspect').innerHTML=
+   '<span class="label" style="color:'+col[n.t]+'">'+n.t+'</span><h3>'+n.l+'</h3><p style="color:#98a3af">'+n.d+'</p><div style="margin-top:14px">'+
+   n.info.map(s=>{const[a,b]=s.split(': ');return '<div class="row"><span>'+a+'</span><b>'+b+'</b></div>'}).join('')+
+   '<div class="row"><span>Linked objects</span><b>'+nb.length+'</b></div></div><div class="chips" style="margin-top:12px">'+nb.map(m=>'<span class="chip" style="cursor:pointer;border-color:'+col[m.t]+'55" data-n="'+m.id+'">'+m.l+'</span>').join('')+'</div>';
+  document.querySelectorAll('#inspect [data-n]').forEach(c=>c.onclick=()=>inspect(byId[c.dataset.n]));
+}
+inspect(sel);
+document.getElementById('gcount').textContent=nodes.length+' OBJECTS · '+edges.length+' LINKS';
+function step(){
+  const cx=GW/2,cy=GH/2;
+  nodes.forEach(a=>{
+    a.vx+=(cx-a.x)*.0016;a.vy+=(cy-a.y)*.0016;
+    nodes.forEach(b=>{if(a===b)return;let dx=a.x-b.x,dy=a.y-b.y,d=Math.hypot(dx,dy)||1;if(d<150){const f=(150-d)/d*.05;a.vx+=dx*f;a.vy+=dy*f}});
+  });
+  edges.forEach(([i,j])=>{const a=byId[i],b=byId[j];let dx=b.x-a.x,dy=b.y-a.y,d=Math.hypot(dx,dy)||1,f=(d-110)*.004;a.vx+=dx/d*f*d*.12;a.vy+=dy/d*f*d*.12;b.vx-=dx/d*f*d*.12;b.vy-=dy/d*f*d*.12});
+  nodes.forEach(n=>{if(n===drag)return;n.vx*=.86;n.vy*=.86;n.x+=n.vx;n.y+=n.vy;n.x=Math.max(40,Math.min(GW-40,n.x));n.y=Math.max(30,Math.min(GH-30,n.y))});
+}
+function draw(){
+  step();g.clearRect(0,0,GW,GH);
+  const act=hover||sel,an=new Set([act.id,...neigh(act).map(n=>n.id)]);
+  edges.forEach(([i,j])=>{const a=byId[i],b=byId[j],on=a===act||b===act;
+    g.strokeStyle=on?'rgba(76,144,240,.9)':'rgba(120,135,150,.18)';g.lineWidth=on?1.4:1;g.beginPath();g.moveTo(a.x,a.y);g.lineTo(b.x,b.y);g.stroke()});
+  nodes.forEach(n=>{
+    const dim=!an.has(n.id),r=n.t==='project'?8:n.t==='domain'?9:6;
+    g.globalAlpha=dim?.28:1;g.fillStyle='#0a0c0f';g.strokeStyle=col[n.t];g.lineWidth=n===sel?2.5:1.5;
+    g.beginPath();
+    if(n.t==='domain'){g.moveTo(n.x,n.y-r-2);g.lineTo(n.x+r+2,n.y);g.lineTo(n.x,n.y+r+2);g.lineTo(n.x-r-2,n.y);g.closePath()}
+    else if(n.t==='tool'){g.rect(n.x-r/1.2,n.y-r/1.2,r*1.7,r*1.7)}
+    else g.arc(n.x,n.y,r,0,6.28);
+    g.fill();g.stroke();
+    g.fillStyle=col[n.t];g.globalAlpha=dim?.15:.9;g.beginPath();g.arc(n.x,n.y,2,0,6.28);g.fill();
+    g.globalAlpha=dim?.35:1;g.fillStyle='#d7dee6';g.font='11px ui-monospace,Menlo,monospace';g.textAlign='center';g.fillText(n.l,n.x,n.y+r+16);
+  });
+  g.globalAlpha=1;requestAnimationFrame(draw);
+}
+draw();
+function pos(e){const r=gc.getBoundingClientRect(),t=e.touches?e.touches[0]:e;return{x:t.clientX-r.left,y:t.clientY-r.top}}
+function pick(p){return nodes.find(n=>Math.hypot(n.x-p.x,n.y-p.y)<18)}
+gc.addEventListener('mousemove',e=>{const p=pos(e);hover=pick(p)||null;if(drag){drag.x=p.x;drag.y=p.y}gc.style.cursor=hover?'pointer':'crosshair'});
+gc.addEventListener('mouseleave',()=>hover=null);
+gc.addEventListener('mousedown',e=>{const n=pick(pos(e));if(n){drag=n;inspect(n)}});
+addEventListener('mouseup',()=>drag=null);
+gc.addEventListener('touchstart',e=>{const n=pick(pos(e));if(n){drag=n;inspect(n);hover=n}},{passive:true});
+gc.addEventListener('touchmove',e=>{if(drag){const p=pos(e);drag.x=p.x;drag.y=p.y}},{passive:true});
+gc.addEventListener('touchend',()=>{drag=null;hover=null});
+
+/* project filters + expand */
+document.querySelectorAll('.f').forEach(b=>b.onclick=()=>{
+  document.querySelectorAll('.f').forEach(x=>x.classList.toggle('on',x===b));
+  document.querySelectorAll('.card').forEach(c=>c.classList.toggle('hide',b.dataset.f!=='all'&&!c.dataset.t.split(' ').includes(b.dataset.f)));
+});
+document.querySelectorAll('.card').forEach(c=>c.onclick=()=>c.classList.toggle('open'));
+
+/* pipeline */
+const stages=[
+ ['S0','UMAP pre-filter','Embeds light curves with UMAP to discard obvious non-candidates before any heavy compute runs.'],
+ ['S1','Ingest & clean','Pulls TESS, Kepler and K2 photometry, handles gaps and systematics, and normalises flux.'],
+ ['S2','Detrend','Removes stellar variability and instrumental trends while preserving transit shape.'],
+ ['S3','Physics layer','Differentiable Mandel-Agol transit model in PyTorch, so the network fits physically valid signals.'],
+ ['S4','Augment','PhysicsAugmentor generates realistic transit examples to address class imbalance.'],
+ ['S5','Vet','Contamination fingerprinting with Gaia DR3, with AstroSat UVIT/SXT used for chromatic and activity checks.'],
+ ['S6','Validate','Four-hypothesis Bayesian false-positive probability with TRILEGAL priors.'],
+ ['S7','Characterise','Earth Similarity Index, habitable-zone classification and a ranked Indian observatory follow-up schedule.'],
+];
+const pipe=document.getElementById('pipe'),sd=document.getElementById('stgd');
+stages.forEach((s,i)=>{const d=document.createElement('div');d.className='stg';d.innerHTML='<div class="k">'+s[0]+'</div><div class="t">'+s[1]+'</div>';
+  d.onclick=()=>show(i);pipe.appendChild(d)});
+function show(i){[...pipe.children].forEach((c,j)=>c.classList.toggle('on',i===j));sd.innerHTML='<span class="label" style="color:var(--acc)">'+stages[i][0]+' · '+stages[i][1]+'</span><p style="margin-top:6px">'+stages[i][2]+'</p>'}
+show(0);
+let auto=0;const ap=setInterval(()=>{auto=(auto+1)%8;show(auto)},4200);
+pipe.addEventListener('click',()=>clearInterval(ap));
+
+/* command palette */
+const cmds=[['Go to Overview','#top'],['Go to Ontology','#ontology'],['Go to Operations','#projects'],['Go to Pipeline','#pipeline'],['Go to Mission Log','#log'],['Go to Contact','#contact'],
+ ['Open GitHub','https://github.com/YOUR-USERNAME'],['Open LinkedIn','https://www.linkedin.com/in/YOUR-HANDLE'],['Send email','mailto:you@example.com']];
+const pal=document.getElementById('pal'),pin=document.getElementById('pin'),pl=document.getElementById('plist');let si=0,cur=cmds;
+function render(){pl.innerHTML=cur.map((c,i)=>'<div class="'+(i===si?'sel':'')+'" data-i="'+i+'"><span>'+c[0]+'</span><span>'+(c[1][0]==='#'?'jump':'open')+'</span></div>').join('');
+  pl.querySelectorAll('div').forEach(d=>d.onclick=()=>run(cur[d.dataset.i]))}
+function run(c){if(!c)return;pal.classList.remove('on');if(c[1][0]==='#')location.hash=c[1];else window.open(c[1],'_blank','noopener')}
+function openP(){pal.classList.add('on');pin.value='';cur=cmds;si=0;render();pin.focus()}
+document.getElementById('kb').onclick=openP;
+pal.addEventListener('click',e=>{if(e.target===pal)pal.classList.remove('on')});
+pin.addEventListener('input',()=>{cur=cmds.filter(c=>c[0].toLowerCase().includes(pin.value.toLowerCase()));si=0;render()});
+addEventListener('keydown',e=>{
+  if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==='k'){e.preventDefault();pal.classList.contains('on')?pal.classList.remove('on'):openP()}
+  if(!pal.classList.contains('on'))return;
+  if(e.key==='Escape')pal.classList.remove('on');
+  if(e.key==='ArrowDown'){si=Math.min(si+1,cur.length-1);render();e.preventDefault()}
+  if(e.key==='ArrowUp'){si=Math.max(si-1,0);render();e.preventDefault()}
+  if(e.key==='Enter')run(cur[si]);
+});
+</script>
+</body>
+</html>
