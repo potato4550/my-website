@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>LOBO — Space Systems · AI/ML · Engineering</title>
+<title>Alan — Space Systems · AI/ML · Engineering</title>
 <meta name="description" content="Postgraduate engineering student building AI/ML systems for astronomy and space technology.">
 <style>
 :root{
@@ -431,7 +431,7 @@ pipe.addEventListener('click',()=>clearInterval(ap));
 
 /* command palette */
 const cmds=[['Go to Overview','#top'],['Go to Ontology','#ontology'],['Go to Operations','#projects'],['Go to Pipeline','#pipeline'],['Go to Mission Log','#log'],['Go to Contact','#contact'],
- ['Open GitHub','https://github.com/YOUR-USERNAME'],['Open LinkedIn','https://www.linkedin.com/in/YOUR-HANDLE'],['Send email','mailto:you@example.com']];
+ ['Open GitHub','https://github.com/potato4550'],['Open LinkedIn','www.linkedin.com/in/alan-lobo-3b0a21375E'],['Send email','mailto:lobolan019@gmail.com']];
 const pal=document.getElementById('pal'),pin=document.getElementById('pin'),pl=document.getElementById('plist');let si=0,cur=cmds;
 function render(){pl.innerHTML=cur.map((c,i)=>'<div class="'+(i===si?'sel':'')+'" data-i="'+i+'"><span>'+c[0]+'</span><span>'+(c[1][0]==='#'?'jump':'open')+'</span></div>').join('');
   pl.querySelectorAll('div').forEach(d=>d.onclick=()=>run(cur[d.dataset.i]))}
